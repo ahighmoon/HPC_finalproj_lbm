@@ -5,8 +5,8 @@ using namespace std;
 int writefile(int a, int b, int r);
 float dist(int ii, int jj);
 
-#define CENTERX 32
-#define CENTERY 32
+#define CENTERX 64
+#define CENTERY 64
 
 int writefile(int a, int b, int r){
     string filename = "obstacles_" + to_string(a) + "x" + to_string(b) + ".dat";
@@ -34,8 +34,8 @@ float dist(int ii, int jj){
 }
 
 int main(){
-    int a = 64;
-    int b = 64;
+    int a = 512;
+    int b = 256;
     int r = 3;
     writefile(a, b, r);
 }
