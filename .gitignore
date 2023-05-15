@@ -1,0 +1,12 @@
+*.o
+
+d2q9-bgk.out
+d2q9-bgk
+d2q9-bgk-hpc.out
+d2q9-bgk-hpc
+obs.out
+obs
+cuda-d2q9-bgk
+cuda-d2q9-bgk.out
+png/animation*.gif
+png/v*.gif
