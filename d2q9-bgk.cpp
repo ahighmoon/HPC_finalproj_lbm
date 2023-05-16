@@ -195,8 +195,8 @@ int main(int argc, char* argv[])
     else{
       system("cd png && convert -delay 4 -loop 1 *.png velocity.gif");
     }
-  }
- */ 
+  } 
+  */
   finalise(&params, &cells, &tmp_cells, &obstacles, &av_vels);
 
   return EXIT_SUCCESS;
@@ -240,7 +240,7 @@ int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells){
   /* loop over _all_ cells */
   float w1 = params.density  / 9.f;
   float w2 = params.density / 36.f;
-  #pragma omp parallel for num_threads(NUMOFTHREADS) schedule(static) shared(cells, tmp_cells)
+  #pragma omp parallel for shared(cells, tmp_cells) num_threads(NUMOFTHREADS) schedule(static)
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
@@ -280,7 +280,7 @@ int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells){
 
 int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles){
   /* loop over the cells in the grid */
-  #pragma omp parallel for num_threads(NUMOFTHREADS) schedule(static) shared(cells, tmp_cells, obstacles)
+  #pragma omp parallel for shared(cells, tmp_cells, obstacles) num_threads(NUMOFTHREADS) schedule(static)
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
