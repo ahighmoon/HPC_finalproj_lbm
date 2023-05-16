@@ -448,6 +448,7 @@ float av_velocity(const t_param params, t_speed* cells, int* obstacles){
       }
     }
   }
+ 
   return tot_u / (float)tot_cells;
 }
 
@@ -521,7 +522,9 @@ int initialise(const char* paramfile, const char* obstaclefile,
 
 float calc_reynolds(const t_param params, t_speed* cells, int* obstacles){
   const float viscosity = 1.f / 6.f * (2.f / params.omega - 1.f);
-  return av_velocity(params, cells, obstacles) * params.reynolds_dim / viscosity;
+  float avvel= av_velocity(params, cells, obstacles);
+  printf("avvel = %f\n", avvel);
+  return avvel * params.reynolds_dim / viscosity;
 }
 
 
