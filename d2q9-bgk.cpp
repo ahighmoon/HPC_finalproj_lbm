@@ -62,7 +62,7 @@
 #define FN3 ".png"
 #define TARGETDAT " ./png/iter.dat"
 #define TARGETPNG " ./png/iter.png"
-#define NUMOFTHREADS 6
+#define NUMOFTHREADS 8
 
 /* struct to hold the parameter values */
 typedef struct{
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
     obstaclefile = argv[2];
   }
 
-  printf("This machine has %d cores.\n", omp_get_num_procs());
+  // printf("This machine has %d cores.\n", omp_get_num_procs());
   /* Total/init time starts here: initialise our data structures and load values from file */
   gettimeofday(&timstr, NULL);
   tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);

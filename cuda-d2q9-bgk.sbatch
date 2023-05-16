@@ -3,7 +3,7 @@
 #SBATCH --job-name d2q9-bgk
 #SBATCH --time 00:10:00
 #SBATCH --exclusive 
-
+#SBATCH --gre=gpu:1
 echo Running on host `hostname`
 #echo Time is `date`
 echo Directory is `pwd`

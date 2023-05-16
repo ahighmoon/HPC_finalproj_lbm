@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS= -std=c++11 -Wall -O3 -march=native -Wno-unused-result -fopenmp
+CXXFLAGS= -std=c++11 -Wall -O3 -march=native -Wno-unused-result
 LIBS = -lm
 
 NVCC = nvcc
