@@ -10,3 +10,4 @@ cuda-d2q9-bgk
 cuda-d2q9-bgk.out
 png/animation*.gif
 png/v*.gif
+slurm-*
