@@ -150,9 +150,11 @@ int main(int argc, char* argv[])
   for (int tt = 0; tt < params.maxIters; tt++){
     timestep(params, cells, tmp_cells, obstacles, tt);
     //av_vels[tt] = av_velocity(params, cells, obstacles);
+    /*
     if ((tt + 1) % params.framerate == 0){
       write_values(params, cells, obstacles, 1000+(tt+1)/params.framerate);
     }
+    */
   }
 
   /* Total/collate time stops here.*/
@@ -164,6 +166,7 @@ int main(int argc, char* argv[])
   printf("Total elapsed time:\t\t\t%.6lf (s)\n", toc - tic);
 
   /* make two graphs*/
+  /*
   std::string FN;
   std::string command;
   std::string mv = "mv";
@@ -193,6 +196,7 @@ int main(int argc, char* argv[])
       system("cd png && convert -delay 4 -loop 1 *.png velocity.gif");
     }
   } 
+  */
   finalise(&params, &cells, &tmp_cells, &obstacles, &av_vels);
 
   return EXIT_SUCCESS;
@@ -200,7 +204,7 @@ int main(int argc, char* argv[])
 
 int timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles, int tt){
   propagate(params, cells, tmp_cells);
-  accelerate_flow(params, cells, obstacles);
+  //accelerate_flow(params, cells, obstacles);
   rebound(params, cells, tmp_cells, obstacles);
   collision(params, cells, tmp_cells, obstacles);
   return EXIT_SUCCESS;
@@ -236,7 +240,7 @@ int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells){
   /* loop over _all_ cells */
   float w1 = params.density  / 9.f;
   float w2 = params.density / 36.f;
-  #pragma omp parallel for num_threads(NUMOFTHREADS)
+  #pragma omp parallel for shared(cells, tmp_cells) num_threads(NUMOFTHREADS) schedule(static)
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
@@ -276,7 +280,7 @@ int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells){
 
 int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles){
   /* loop over the cells in the grid */
-  #pragma omp parallel for num_threads(NUMOFTHREADS)
+  #pragma omp parallel for shared(cells, tmp_cells, obstacles) num_threads(NUMOFTHREADS) schedule(static)
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
@@ -309,7 +313,7 @@ int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obs
   ** NB the collision step is called after
   ** the propagate step and so values of interest
   ** are in the scratch-space grid */
-  #pragma omp parallel for num_threads(NUMOFTHREADS)
+  #pragma omp parallel for shared(cells, tmp_cells, obstacles) num_threads(NUMOFTHREADS) schedule(static)
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
