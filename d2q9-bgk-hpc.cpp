@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
     obstaclefile = argv[2];
   }
 
-  printf("This machine has %d cores.\n", omp_get_num_procs());
+  //printf("This machine has %d cores.\n", omp_get_num_procs());
   /* Total/init time starts here: initialise our data structures and load values from file */
   gettimeofday(&timstr, NULL);
   tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
@@ -147,6 +147,7 @@ int main(int argc, char* argv[])
   for (int tt = 0; tt < params.maxIters; tt++){
     timestep(params, cells, tmp_cells, obstacles, tt);
     av_vels[tt] = av_velocity(params, cells, obstacles);
+    /*
     if (tt % params.framerate == (params.framerate - 1)){
       write_values(params, cells, obstacles, av_vels, tt);
       //system("gnuplot state.plt");
@@ -155,6 +156,7 @@ int main(int argc, char* argv[])
       system(command.c_str());
       //system("ls ./png");
     }
+    */
   }
 
   /* Total/collate time stops here.*/

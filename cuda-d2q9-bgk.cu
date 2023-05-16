@@ -173,6 +173,7 @@ int main(int argc, char* argv[])
 
   for (int tt = 0; tt < params.maxIters; tt++){
     timestep(params, cellsgpu, tmp_cellsgpu, obstaclesgpu, tt, gridDim, blockDim);
+    /*
     if ((tt + 1) % params.framerate == 0){
       calc_values<<<gridDim,blockDim>>>(params, cellsgpu, obstaclesgpu, ugpu, vorticitygpu, local_densitygpu, u_xgpu, u_ygpu);
       gettimeofday(&timstr, NULL);
@@ -184,6 +185,7 @@ int main(int argc, char* argv[])
       write_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
       write_time += write_toc - write_tic;
     }
+    */
   }
   cudaDeviceSynchronize();
   gettimeofday(&timstr, NULL);
@@ -200,6 +202,7 @@ int main(int argc, char* argv[])
   printf("Producing animation ...\n");
 
   /* make two graphs*/
+  /*
   std::string FN;
   std::string command;
   std::string mv = "mv";
@@ -229,6 +232,7 @@ int main(int argc, char* argv[])
       system("cd png && convert -delay 4 -loop 1 *.png velocity.gif");
     }
   }
+  */
   cudaFree(paramsgpu);
   cudaFree(cellsgpu);
   cudaFree(tmp_cellsgpu);
@@ -437,6 +441,7 @@ float av_velocity(const t_param params, t_speed* cells, int* obstacles){
                          + cells[index].speeds[8]))
                      / local_density;
         /* accumulate the norm of x- and y- velocity components */
+        printf("index = %d, local_density = %f, u_x = %f\n", index, local_density, u_x);
         tot_u += sqrtf((u_x * u_x) + (u_y * u_y));
         /* increase counter of inspected cells */
         ++tot_cells;

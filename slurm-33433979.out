@@ -1,0 +1,19 @@
+Running on host cs302.hpc.nyu.edu
+Directory is /scratch/yz6994/HPC_finalproj_lbm
+Slurm job ID is 33433979
+==done==
+cells[0][0] = 0.044444
+cells[0][1] = 0.011111
+cells[0][2] = 0.011111
+cells[0][3] = 0.011111
+cells[0][4] = 0.011111
+cells[0][5] = 0.002778
+cells[0][6] = 0.002778
+cells[0][7] = 0.002778
+cells[0][8] = 0.002778
+avvel = 0.000000
+Reynolds number:		0.000000000000E+00
+Total elapsed time:			0.008551 (s)
+Total write time:			0.000000 (s)
+Total compute time:			0.008551 (s)
+Producing animation ...

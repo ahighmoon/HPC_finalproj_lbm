@@ -62,7 +62,7 @@
 #define FN3 ".png"
 #define TARGETDAT " ./png/iter.dat"
 #define TARGETPNG " ./png/iter.png"
-#define NUMOFTHREADS 6
+#define NUMOFTHREADS 48
 
 /* struct to hold the parameter values */
 typedef struct{
