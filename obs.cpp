@@ -6,7 +6,7 @@ int writefile(int a, int b, int r);
 float dist(int ii, int jj);
 
 #define CENTERX 64
-#define CENTERY 512
+#define CENTERY 256
 
 int writefile(int a, int b, int r){
     string filename = "obstacles_" + to_string(a) + "x" + to_string(b) + ".dat";
