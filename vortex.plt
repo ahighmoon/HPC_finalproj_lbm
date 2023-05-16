@@ -8,14 +8,23 @@ set terminal png
 set output './png/iter.png'
 
 zstep=0.01
-set cbrange [-0.04:0.04 ]
+set cbrange [-0.015:0.015 ]
+#set cbrange [-0.03:0.03]
 set cbtics zstep
-set palette defined (-0.03 "red",\
-                     -0.002 "orange",\
-                     0 "yellow",\
-                     0.002 "light-green",\
-                     0.03 "green")        
-
+set palette defined (-0.04 "red",\
+                     -0.03 "orange",\
+                     -0.02 "goldenrod",\
+                     -0.006 "yellow",\
+                     -0.004 "khaki1",\
+                     -0.002 "lemonchiffon",\
+                     0 "gray100",\
+                     0.002 "light-cyan",\
+                     0.004 "light-turquoise",\
+                     0.008 "cyan",\
+                     0.01 "dark-cyan",\
+                     0.02 "web-blue",\
+                     0.03 "royalblue",\
+                     0.04 "blue")  
 
 #set terminal postscript eps size 12,10 enhanced color font 'Verdana,30' linewidth 2
 #set output 'final_state.eps'
