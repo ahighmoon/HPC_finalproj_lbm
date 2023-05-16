@@ -1,9 +1,0 @@
-Running on host cs063.hpc.nyu.edu
-Directory is /scratch/yz6994/HPC_finalproj_lbm
-Slurm job ID is 33402155
-==done==
-Reynolds number:		0.000000000000E+00
-Total elapsed time:			0.001724 (s)
-Total write time:			0.000000 (s)
-Total compute time:			0.001724 (s)
-Producing animation ...
