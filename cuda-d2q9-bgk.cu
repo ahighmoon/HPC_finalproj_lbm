@@ -441,7 +441,7 @@ float av_velocity(const t_param params, t_speed* cells, int* obstacles){
                          + cells[index].speeds[8]))
                      / local_density;
         /* accumulate the norm of x- and y- velocity components */
-        printf("index = %d, local_density = %f, u_x = %f\n", index, local_density, u_x);
+        //printf("index = %d, local_density = %f, u_x = %f\n", index, local_density, u_x);
         tot_u += sqrtf((u_x * u_x) + (u_y * u_y));
         /* increase counter of inspected cells */
         ++tot_cells;
