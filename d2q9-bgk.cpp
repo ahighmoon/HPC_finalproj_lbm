@@ -11,7 +11,7 @@
 #define FN3 ".png"
 #define TARGETDAT " ./png/iter.dat"
 #define TARGETPNG " ./png/iter.png"
-#define NUMOFTHREADS 8
+#define NUMOFTHREADS 48
 
 /* struct to hold the parameter values */
 typedef struct{
@@ -79,7 +79,8 @@ int main(int argc, char* argv[])
   int*     obstacles = NULL;    /* grid indicating which cells are blocked */
   float* av_vels   = NULL;     /* a record of the av. velocity computed for each timestep */
   struct timeval timstr;                                                             /* structure to hold elapsed time */
-  double tic, toc; /* elapsed time */
+  double write_time, write_tic, write_toc, total_tic, total_toc; /* elapsed time */
+  write_time = 0;
 
   /* parse the command line */
   if (argc != 3){
@@ -93,29 +94,36 @@ int main(int argc, char* argv[])
   // printf("This machine has %d cores.\n", omp_get_num_procs());
   /* Total/init time starts here: initialise our data structures and load values from file */
   gettimeofday(&timstr, NULL);
-  tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+  total_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
   initialise(paramfile, obstaclefile, &params, &cells, &tmp_cells, &obstacles, &av_vels);
 
   for (int tt = 0; tt < params.maxIters; tt++){
     timestep(params, cells, tmp_cells, obstacles, tt);
-    //av_vels[tt] = av_velocity(params, cells, obstacles);
-    /*
+    ///*
     if ((tt + 1) % params.framerate == 0){
+      gettimeofday(&timstr, NULL);
+      write_tic = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
       write_values(params, cells, obstacles, 1000+(tt+1)/params.framerate);
+      gettimeofday(&timstr, NULL);
+      write_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+      write_time += write_toc - write_tic;
     }
-    */
+    //*/
   }
 
   /* Total/collate time stops here.*/
   gettimeofday(&timstr, NULL);
-  toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
+  total_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
   
   printf("==done==\n");
   printf("Reynolds number:\t\t%.12E\n", calc_reynolds(params, cells, obstacles));
-  printf("Total elapsed time:\t\t\t%.6lf (s)\n", toc - tic);
+  printf("Total elapsed time:\t\t\t%.6lf (s)\n", total_toc - total_tic);
+  printf("Total write time:\t\t\t%.6lf (s)\n", write_time);
+  printf("Total compute time:\t\t\t%.6lf (s)\n", total_toc - total_tic - write_time);
+  printf("Producing animation ...\n");
 
   /* make two graphs*/
-  /*
+  ///*
   std::string FN;
   std::string command;
   std::string mv = "mv";
@@ -145,7 +153,7 @@ int main(int argc, char* argv[])
       system("cd png && convert -delay 4 -loop 1 *.png velocity.gif");
     }
   } 
-  */
+  //*/
   finalise(&params, &cells, &tmp_cells, &obstacles, &av_vels);
 
   return EXIT_SUCCESS;
