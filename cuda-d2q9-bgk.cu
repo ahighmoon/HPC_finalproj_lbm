@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
   t_speed* tmp_cells = NULL;    /* scratch space */
   int*     obstacles = NULL;    /* grid indicating which cells are blocked */
   struct timeval timstr;                                                             /* structure to hold elapsed time */
-  double compute_tic, compute_toc, write_time, write_tic, write_toc, total_tic, total_toc; /* elapsed time */
+  double write_time, write_tic, write_toc, total_tic, total_toc; /* elapsed time */
   write_time = 0;
 
   /* parse the command line */
