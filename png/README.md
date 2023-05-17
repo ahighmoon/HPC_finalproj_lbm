@@ -1,0 +1,1 @@
+This directry is for saving the .dat/png/gif files locally. Do not delete!

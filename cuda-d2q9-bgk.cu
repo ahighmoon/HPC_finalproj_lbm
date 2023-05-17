@@ -1,54 +1,3 @@
-/*
-** Code to implement a d2q9-bgk lattice boltzmann scheme.
-** 'd2' inidates a 2-dimensional grid, and
-** 'q9' indicates 9 velocities per grid cell.
-** 'bgk' refers to the Bhatnagar-Gross-Krook collision step.
-**
-** The 'speeds' in each cell are numbered as follows:
-**
-** 6 2 5
-**  \|/
-** 3-0-1
-**  /|\
-** 7 4 8
-**
-** A 2D grid:
-**
-**           cols
-**       --- --- ---
-**      | D | E | F |
-** rows  --- --- ---
-**      | A | B | C |
-**       --- --- ---
-**
-** 'unwrapped' in row major order to give a 1D array:
-**
-**  --- --- --- --- --- ---
-** | A | B | C | D | E | F |
-**  --- --- --- --- --- ---
-**
-** Grid indicies are:
-**
-**          ny
-**          ^       cols(ii)
-**          |  ----- ----- -----
-**          | | ... | ... | etc |
-**          |  ----- ----- -----
-** rows(jj) | | 1,0 | 1,1 | 1,2 |
-**          |  ----- ----- -----
-**          | | 0,0 | 0,1 | 0,2 |
-**          |  ----- ----- -----
-**          ----------------------> nx
-**
-** Note the names of the input parameter and obstacle files
-** are passed on the command line, e.g.:
-**
-**   ./d2q9-bgk input.params obstacles.dat
-**
-** Be sure to adjust the grid dimensions in the parameter file
-** if you choose a different obstacle file.
-*/
-
 #include <cstdio>
 #include <string>
 #include <cstdlib>
@@ -111,8 +60,7 @@ float calc_reynolds(const t_param params, t_speed* cells, int* obstacles);
 /* utility functions */
 void usage(const char* exe);
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
   char*    paramfile = NULL;    /* name of the input parameter file */
   char*    obstaclefile = NULL; /* name of a the input obstacle file */
   t_param  params;              /* struct to hold parameter values */
@@ -120,7 +68,7 @@ int main(int argc, char* argv[])
   t_speed* tmp_cells = NULL;    /* scratch space */
   int*     obstacles = NULL;    /* grid indicating which cells are blocked */
   struct timeval timstr;                                                             /* structure to hold elapsed time */
-  double compute_tic, compute_toc, write_time, write_tic, write_toc, total_tic, total_toc; /* elapsed time */
+  double write_time, write_tic, write_toc, total_tic, total_toc; /* elapsed time */
   write_time = 0;
 
   /* parse the command line */
@@ -132,8 +80,7 @@ int main(int argc, char* argv[])
     obstaclefile = argv[2];
   }
  
-  /* initialise our data structures and load values from file */
-  t_param*  paramsgpu;              /* struct to hold parameter values */
+  t_param*  paramsgpu;
   t_speed* cellsgpu;
   t_speed* tmp_cellsgpu;
   int*     obstaclesgpu;
@@ -252,7 +199,6 @@ int main(int argc, char* argv[])
 
 int timestep(const t_param paramsgpu, t_speed* cellsgpu, t_speed* tmp_cellsgpu, int* obstaclesgpu, int tt, dim3 gridDim, dim3 blockDim){
   propagate<<<gridDim,blockDim>>>(paramsgpu, cellsgpu, tmp_cellsgpu);
-  //accelerate_flow(params, cells, obstacles);
   rebound<<<gridDim,blockDim>>>(paramsgpu, cellsgpu, tmp_cellsgpu, obstaclesgpu);
   collision<<<gridDim,blockDim>>>(paramsgpu, cellsgpu, tmp_cellsgpu, obstaclesgpu);
   return EXIT_SUCCESS;
@@ -305,9 +251,6 @@ void propagate(const t_param params, t_speed* cells, t_speed* tmp_cells){
 
 __global__ 
 void rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles){
-  /* loop over the cells in the grid */
-  //#pragma omp parallel for num_threads(NUMOFTHREADS)
-  
   long ii = threadIdx.x + blockDim.x * blockIdx.x;
   long jj = threadIdx.y + blockDim.y * blockIdx.y;
   int index = ii + jj*params.nx;
@@ -397,9 +340,7 @@ void collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* ob
 
     /* relaxation step */
     for (int kk = 0; kk < NSPEEDS; kk++){
-      cells[index].speeds[kk] = tmp_index.speeds[kk]
-                                              + params.omega
-                                              * (d_equ[kk] - tmp_index.speeds[kk]);
+      cells[index].speeds[kk] = tmp_index.speeds[kk] + params.omega * (d_equ[kk] - tmp_index.speeds[kk]);
     }
   }
 }
@@ -532,10 +473,11 @@ __global__
 void calc_values(const t_param params, t_speed* cells, int* obstacles, float* u, float* vorticity,float* local_density,float* u_x,float* u_y){
   long ii = threadIdx.x + blockDim.x * blockIdx.x;
   long jj = threadIdx.y + blockDim.y * blockIdx.y;
-  
+    
   if (ii < params.nx && jj < params.ny){
     int index = ii + jj*params.nx;
 
+    //calculate the vorticity
     if (obstacles[index]){
       u_x[index] = u_y[index] = 0.f;
     }
@@ -550,17 +492,14 @@ void calc_values(const t_param params, t_speed* cells, int* obstacles, float* u,
               + cells[index].speeds[7]+ cells[index].speeds[8]))/ local_density[index];
       u[index] = sqrtf(u_x[index]*u_x[index]+u_y[index]*u_y[index]);
     }
-  }
-
-  //calculate the vorticity
-  if (ii < params.nx && jj < params.ny){
-    int index = ii + jj*params.nx;
+  
+    //calculate the vorticity
     if (ii==0 || jj==0 || ii==params.nx-1 || jj==params.ny-1){
       vorticity[index] = 0;
     }
     else{
-      double duy_dx = (u_y[ii+(jj+1)*params.nx] - u_y[ii+(jj-1)*params.nx]) / 2;
-      double dux_dy = (u_x[ii+1+jj*params.nx] - u_x[ii-1+jj*params.nx]) / 2;
+      double duy_dx = (u_y[index + params.nx] - u_y[index - params.nx]) / 2;
+      double dux_dy = (u_x[index+1] - u_x[index-1]) / 2;
       vorticity[index] = duy_dx - dux_dy;
     }
   }
