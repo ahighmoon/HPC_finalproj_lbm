@@ -145,7 +145,7 @@ int main(int argc, char* argv[]){
 
 void timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles, int tt){
   propagate(params, cells, tmp_cells);
-  rebound(params, cells, tmp_cells, obstacles);
+  //rebound(params, cells, tmp_cells, obstacles);
   collision(params, cells, tmp_cells, obstacles);
 }
 
@@ -221,10 +221,11 @@ void collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* ob
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
+      t_speed tmp_index = tmp_cells[index];
       if (!obstacles[index]){
         /* compute local density total */
         float local_density = 0.f;
-        t_speed tmp_index = tmp_cells[index];
+        // t_speed tmp_index = tmp_cells[index];
 
         for (int kk = 0; kk < NSPEEDS; kk++){
           local_density += tmp_index.speeds[kk];
@@ -277,6 +278,16 @@ void collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* ob
         for (int kk = 0; kk < NSPEEDS; kk++){
           cells[index].speeds[kk] = tmp_index.speeds[kk] + params.omega * (d_equ[kk] - tmp_index.speeds[kk]);
         }
+      }
+      else{
+        cells[index].speeds[1] = tmp_index.speeds[3];
+        cells[index].speeds[2] = tmp_index.speeds[4];
+        cells[index].speeds[3] = tmp_index.speeds[1];
+        cells[index].speeds[4] = tmp_index.speeds[2];
+        cells[index].speeds[5] = tmp_index.speeds[7];
+        cells[index].speeds[6] = tmp_index.speeds[8];
+        cells[index].speeds[7] = tmp_index.speeds[5];
+        cells[index].speeds[8] = tmp_index.speeds[6];
       }
     }
   }
