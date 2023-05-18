@@ -79,7 +79,7 @@ int main(int argc, char* argv[]){
 
   for (int tt = 0; tt < params.maxIters; tt++){
     timestep(params, cells, tmp_cells, obstacles, tt);
-    ///*
+    /*
     if ((tt + 1) % params.framerate == 0){
       calc_values(params, cells, obstacles, u, vorticity, local_density, u_x, u_y);
       gettimeofday(&timstr, NULL);
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]){
       write_toc = timstr.tv_sec + (timstr.tv_usec / 1000000.0);
       write_time += write_toc - write_tic;
     }
-    //*/
+    */
   }
 
   gettimeofday(&timstr, NULL);
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]){
   printf("Producing animation ...\n");
 
   /* make two graphs*/
-  ///*
+  /*
   std::string FN;
   std::string command;
   std::string mv = "mv";
@@ -133,7 +133,7 @@ int main(int argc, char* argv[]){
       system("cd png && convert -delay 4 -loop 1 *.png velocity.gif");
     }
   } 
-  //*/
+  */
   finalise(&params, &cells, &tmp_cells, &obstacles, &av_vels);
   free(u);
   free(vorticity);
