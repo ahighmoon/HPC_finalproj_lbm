@@ -147,7 +147,6 @@ void timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obs
   propagate(params, cells, tmp_cells);
   rebound(params, cells, tmp_cells, obstacles);
   collision(params, cells, tmp_cells, obstacles);
-  return EXIT_SUCCESS;
 }
 
 void propagate(const t_param params, t_speed* cells, t_speed* tmp_cells){
@@ -345,7 +344,7 @@ void initialise(const char* paramfile, const char* obstaclefile,
   fp = fopen(obstaclefile, "r");
 
   /* read-in the blocked cells list */
-  while ((retval = fscanf(fp, "%d %d %d\n", &xx, &yy, &blocked)) != EOF){
+  while (fscanf(fp, "%d %d %d\n", &xx, &yy, &blocked) != EOF){
     /* assign to array */
     (*obstacles_ptr)[xx + yy*params->nx] = blocked;
   }
