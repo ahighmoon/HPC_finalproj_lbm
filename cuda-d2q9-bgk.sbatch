@@ -3,7 +3,7 @@
 #SBATCH --job-name cuda-d2q9-bgk
 #SBATCH --time 00:10:00
 #SBATCH --exclusive 
-#SBATCH --gre=gpu:1
+#SBATCH --gres=gpu:1
 echo Running on host `hostname`
 echo Slurm job ID is $SLURM_JOB_ID
 #echo This job runs on the following machines:

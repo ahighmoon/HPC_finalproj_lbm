@@ -130,7 +130,7 @@ void collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* ob
   const float w1 = 1.f / 9.f;
   const float w2 = 1.f / 36.f;
 
-  #pragma omp parallel for shared(cells, tmp_cells, obstacles) num_threads(NUMOFTHREADS) schedule(static)
+  #pragma omp parallel for shared(cells, tmp_cells, obstacles) num_threads(NUMOFTHREADS) schedule(dynamic)
   for (int jj = 0; jj < params.ny; jj++){
     for (int ii = 0; ii < params.nx; ii++){
       int index = ii + jj*params.nx;
